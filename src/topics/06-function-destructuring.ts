@@ -3,6 +3,11 @@ interface Product {
     price: number;
 }
 
+interface TaxcalculationOptions {
+    tax: number;
+    products: Product[]
+}
+
 const phone: Product = {
     description: 'Iphone',
     price: 1000
@@ -13,26 +18,27 @@ const tablet: Product = {
     price: 200
 }
 
-interface TaxcalculationOptions {
-    tax: number;
-    products: Product[]
-}
-
 const shoppingCart: Product[] = [phone, tablet];
 const tax: number = 0.15;
 
-const taxCalculation = (options: TaxcalculationOptions) : number[] => {
+const taxCalculation = (options: TaxcalculationOptions) : [number,number] => {
     let total: number = 0;
 
-    options.products.forEach(product => {
-        total += product.price;
+    const {products} = options;
+    const {tax} = options;
+
+    products.forEach(({price}) => {
+        total += price;
     });
-    return [total, options.tax]
+
+    return [total, total * tax];
 }
 
 const result = taxCalculation({products:shoppingCart, tax});
-console.log('Total ', result[0]);
-console.log('Tax ', result[1]);
+const [total, taxAmount] = result;
+
+console.log('Total ', total);
+console.log('Tax ', taxAmount);
 
 
 export {};
